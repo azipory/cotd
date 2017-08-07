@@ -1,4 +1,4 @@
-# Project Title
+# Cotd CI/CD Demonstration
 
 This include intructions to setup the cotd CICD demonstration.
 
