@@ -12,6 +12,7 @@ oc new-project pipeline-prod --description="Cat of the Day Production Environmen
 
 ### Install Jenkins
 oc new-app jenkins-ephemeral -n pipeline-dev
+
 (The Jenkins login and password is admin:password)
 
 ### Enable Jenkins SA manage resources from project Test and Prod
