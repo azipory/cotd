@@ -1,9 +1,8 @@
-#Deploy App
-#==========
+
+deploy application
 oc new-app https://github.com/azipory/cotd.git -n pipeline-dev
 
-#Tag Images for Test/Prod
-#=======================
+Tag Images for Test/Prod
 oc tag cotd:latest cotd:testready -n pipeline-dev
 oc tag cotd:testready cotd:prodready -n pipeline-dev
 
