@@ -1,28 +1,27 @@
 # Project Title
 
-One Paragraph of project description goes here
+This include intructions to setup the cotd CICD demonstration.
 
-## Getting Started
+## Setup
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+### Create Projects
 
-### Prerequisites
+oc new-project pipeline-dev --description="Cat of the Day Development Environment" --display-name="Cat Of The Day - Dev"
+oc new-project pipeline-test --description="Cat of the Day Test Environment" --display-name="Cat Of The Day - Test"
+oc new-project pipeline-prod --description="Cat of the Day Production Environment" --display-name="Cat Of The Day - Prod"
 
-What things you need to install the software and how to install them
+### Install Jenkins
+oc new-app jenkins-ephemeral -n pipeline-dev
+(The Jenkins login and password is admin:password)
 
-```
-Give examples
-```
+### Enable Jenkins SA manage resources from project Test and Prod
+oc policy add-role-to-user edit system:serviceaccount:pipeline-${GUID}-dev:jenkins -n pipeline-test
+oc policy add-role-to-user edit system:serviceaccount:pipeline-${GUID}-dev:jenkins -n pipeline-prod
 
-### Installing
+### Enable the pulling of images from Project Dev to Projects Test and Prod
+oc policy add-role-to-group system:image-puller system:serviceaccounts:pipeline-test -n pipeline-dev
+oc policy add-role-to-group system:image-puller system:serviceaccounts:pipeline-prod -n pipeline-dev
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
 
 And repeat
 
