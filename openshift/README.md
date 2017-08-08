@@ -44,10 +44,16 @@ oc policy add-role-to-group system:image-puller  pipeline-prod -n pipeline-dev
 ```
 oc new-app https://github.com/azipory/cotd.git -n pipleline-dev
 ```
-Prepare images for Test and Production:
+### Prepare images for Test and Production:
 ```
-oc tag cotd:latest cotd:testready -n pipeline-${GUID}-dev
-oc tag cotd:testready cotd:prodready -n pipeline-${GUID}-dev
+oc tag cotd:latest cotd:testready -n pipeline-dev
+oc tag cotd:testready cotd:prodready -n pipeline-prod
+```
+Check images have been taged:
+```
+# oc get is
+NAME      DOCKER REPO                             TAGS                         UPDATED
+cotd      172.30.179.232:5000/pipeline-dev/cotd   prodready,testready,latest   35 minutes ago
 ```
 
 oc new-app https://github.com/azipory/cotd.git -n pipleline-prod
