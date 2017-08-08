@@ -81,7 +81,7 @@ a. Log in to your OpenShift web console.
 b. Select your dev project and click Add to Project.
 c. Select the Import YAML/JSON tab, paste the Build Config pipeline text, from cotd.yaml file,  in the text box and click Create:
 
-![alt text](https://raw.githubusercontent.com/azipory/cotd/openshift/download.png)
+![alt text](download.png)
 
 
 
