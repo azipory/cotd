@@ -40,14 +40,16 @@ oc policy add-role-to-group system:image-puller  pipeline-test -n pipeline-dev
 oc policy add-role-to-group system:image-puller  pipeline-prod -n pipeline-dev
 ```
 
-### Deploy the COTD Application in Development
+### Deploy the COTD Application 
+
+1. Deploy in Development:
 ```
 oc new-app https://github.com/azipory/cotd.git -n pipleline-dev
 ```
-### Prepare images for Test and Production:
+2. Prepare images for Test and Production:
 ```
 oc tag cotd:latest cotd:testready -n pipeline-dev
-oc tag cotd:testready cotd:prodready -n pipeline-prod
+oc tag cotd:testready cotd:prodready -n pipeline-dev
 ```
 Check images have been taged:
 ```
@@ -55,6 +57,28 @@ Check images have been taged:
 NAME      DOCKER REPO                             TAGS                         UPDATED
 cotd      172.30.179.232:5000/pipeline-dev/cotd   prodready,testready,latest   35 minutes ago
 ```
+3. Deploy cotd app in Test and Production:
+```
+oc new-app pipeline-dev/cotd:testready --name=cotd -n pipeline-test
+oc new-app pipeline-dev/cotd:prodready --name=cotd -n pipeline-prod
+```
+4. Create routes:
+```
+oc expose service cotd -n pipeline-dev
+oc expose service cotd -n pipeline-test
+oc expose service cotd -n pipeline-prod
+```
+5. Disable automatic deployment:
+```
+oc get dc cotd -o yaml -n pipeline-${GUID}-dev | sed 's/automatic: true/automatic: false/g' | oc replace -f -
+oc get dc cotd -o yaml -n pipeline-${GUID}-test| sed 's/automatic: true/automatic: false/g' | oc replace -f -
+oc get dc cotd -o yaml -n pipeline-${GUID}-prod | sed 's/automatic: true/automatic: false/g' | oc replace -f -
+```
+
+
+
+
+
 
 oc new-app https://github.com/azipory/cotd.git -n pipleline-prod
 
