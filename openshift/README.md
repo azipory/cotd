@@ -6,7 +6,7 @@ This include intructions to setup the cotd CICD demonstration.
 
 ### Create Projects
 ```
-oc new-project pipeline-dev --description="Cat of the Day Development Environment" --display-name="Cat Of The Day - Dev"```
+oc new-project pipeline-dev --description="Cat of the Day Development Environment" --display-name="Cat Of The Day - Dev"
 oc new-project pipeline-test --description="Cat of the Day Test Environment" --display-name="Cat Of The Day - Test"
 oc new-project pipeline-prod --description="Cat of the Day Production Environment" --display-name="Cat Of The Day - Prod"
 ```
@@ -15,13 +15,12 @@ oc new-project pipeline-prod --description="Cat of the Day Production Environmen
 ```
 oc new-app jenkins-ephemeral -n pipeline-dev
 ```
-
-(The Jenkins login and password is admin:password)
+The Jenkins login and password is admin:password
 
 ### Enable Jenkins SA manage resources from project Test and Prod
 ```
-oc policy add-role-to-user edit system:serviceaccount:pipeline-${GUID}-dev:jenkins -n pipeline-test
-oc policy add-role-to-user edit system:serviceaccount:pipeline-${GUID}-dev:jenkins -n pipeline-prod
+oc policy add-role-to-user edit system:serviceaccount:pipeline-dev:jenkins -n pipeline-test
+oc policy add-role-to-user edit system:serviceaccount:pipeline-dev:jenkins -n pipeline-prod
 ```
 OR
 ```
@@ -34,6 +33,13 @@ oc policy add-role-to-user edit -z jenkins -n pipeline-prod
 oc policy add-role-to-group system:image-puller system:serviceaccounts:pipeline-test -n pipeline-dev
 oc policy add-role-to-group system:image-puller system:serviceaccounts:pipeline-prod -n pipeline-dev
 ```
+OR
+```
+oc policy add-role-to-group system:image-puller  pipeline-test -n pipeline-dev
+oc policy add-role-to-group system:image-puller  pipeline-prod -n pipeline-dev
+
+```
+
 And repeat
 
 ```
