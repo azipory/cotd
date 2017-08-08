@@ -6,12 +6,8 @@ This include intructions to setup the cotd CICD demonstration.
 
 ### Create Projects
 ```
-oc new-project pipeline-dev --description="Cat of the Day Development Environment" --display-name="Cat Of The Day - Dev"
-```
-```
+oc new-project pipeline-dev --description="Cat of the Day Development Environment" --display-name="Cat Of The Day - Dev"```
 oc new-project pipeline-test --description="Cat of the Day Test Environment" --display-name="Cat Of The Day - Test"
-```
-```
 oc new-project pipeline-prod --description="Cat of the Day Production Environment" --display-name="Cat Of The Day - Prod"
 ```
 
