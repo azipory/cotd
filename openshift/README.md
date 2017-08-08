@@ -17,6 +17,7 @@ oc new-app jenkins-ephemeral -n pipeline-dev
 ```
 The Jenkins login and password is admin:password
 
+
 ### Enable Jenkins SA manage resources from project Test and Prod
 ```
 oc policy add-role-to-user edit system:serviceaccount:pipeline-dev:jenkins -n pipeline-test
@@ -37,14 +38,20 @@ OR
 ```
 oc policy add-role-to-group system:image-puller  pipeline-test -n pipeline-dev
 oc policy add-role-to-group system:image-puller  pipeline-prod -n pipeline-dev
-
 ```
 
-And repeat
+### Deploy the COTD Application in Development
+```
+oc new-app https://github.com/azipory/cotd.git -n pipleline-dev
+```
+Prepare images for Test and Production:
+```
+oc tag cotd:latest cotd:testready -n pipeline-${GUID}-dev
+oc tag cotd:testready cotd:prodready -n pipeline-${GUID}-dev
+```
 
-```
-until finished
-```
+oc new-app https://github.com/azipory/cotd.git -n pipleline-prod
+
 
 End with an example of getting some data out of the system or using it for a little demo
 
