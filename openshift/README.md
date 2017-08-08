@@ -21,14 +21,21 @@ oc new-app jenkins-ephemeral -n pipeline-dev
 (The Jenkins login and password is admin:password)
 
 ### Enable Jenkins SA manage resources from project Test and Prod
+```
 oc policy add-role-to-user edit system:serviceaccount:pipeline-${GUID}-dev:jenkins -n pipeline-test
 oc policy add-role-to-user edit system:serviceaccount:pipeline-${GUID}-dev:jenkins -n pipeline-prod
+```
+OR
+```
+oc policy add-role-to-user edit -z jenkins -n pipeline-test
+oc policy add-role-to-user edit -z jenkins -n pipeline-prod
+```
 
 ### Enable the pulling of images from Project Dev to Projects Test and Prod
+```
 oc policy add-role-to-group system:image-puller system:serviceaccounts:pipeline-test -n pipeline-dev
 oc policy add-role-to-group system:image-puller system:serviceaccounts:pipeline-prod -n pipeline-dev
-
-
+```
 And repeat
 
 ```
