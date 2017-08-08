@@ -70,17 +70,18 @@ oc expose service cotd -n pipeline-prod
 ```
 5. Disable automatic deployment:
 ```
-oc get dc cotd -o yaml -n pipeline-${GUID}-dev | sed 's/automatic: true/automatic: false/g' | oc replace -f -
-oc get dc cotd -o yaml -n pipeline-${GUID}-test| sed 's/automatic: true/automatic: false/g' | oc replace -f -
-oc get dc cotd -o yaml -n pipeline-${GUID}-prod | sed 's/automatic: true/automatic: false/g' | oc replace -f -
+oc get dc cotd -o yaml -n pipeline-dev | sed 's/automatic: true/automatic: false/g' | oc replace -f -
+oc get dc cotd -o yaml -n pipeline-test| sed 's/automatic: true/automatic: false/g' | oc replace -f -
+oc get dc cotd -o yaml -n pipeline-prod | sed 's/automatic: true/automatic: false/g' | oc replace -f -
 ```
+### Import Build Config for Jenkins
+
+#### Use the OpenShift web console :
+a. Log in to your OpenShift web console.
+b. Select your dev project and click Add to Project.
+c. Select the Import YAML/JSON tab, paste the Build Config pipeline text in the text box and click Create
 
 
-
-
-
-
-oc new-app https://github.com/azipory/cotd.git -n pipleline-prod
 
 
 End with an example of getting some data out of the system or using it for a little demo
