@@ -21,12 +21,41 @@ items:
                                     echo '*** Build Starting ***'
                                     openshiftBuild bldCfg: 'cotd', buildName: '', checkForTriggeredDeployments: 'false', commitID: '', namespace: '', showBuildLogs: 'true', verbose: 'true'
                                     openshiftVerifyBuild bldCfg: 'cotd', checkForTriggeredDeployments: 'false', namespace: '', verbose: 'false'
+                                    openshiftVerifyBuild apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', bldCfg: 'cotd', checkForTriggeredDeployments: 'false', namespace: '', verbose: 'false'
                                     echo '*** Build Complete ***'
-                              stage ("Deploy and Verify in Development Env")
+          
+                              stage ("Deploy and Verify - Development Env")
                                     echo '*** Deployment Starting ***'
-                                    openshiftDeploy depCfg: 'cotd', namespace: '', verbose: 'false', waitTime: ''
-                                    openshiftVerifyDeployment authToken: '', depCfg: 'cotd', namespace: '', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: ''
+                                    openshiftDeploy apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'cotd', namespace: '', verbose: 'false', waitTime: ''
+                                    openshiftVerifyDeployment apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'cotd', namespace: '', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: ''
                                     echo '*** Deployment Complete ***'
+
+                                    //openshiftDeploy depCfg: 'cotd', namespace: '', verbose: 'false', waitTime: ''
+                                    //openshiftVerifyDeployment authToken: '', depCfg: 'cotd', namespace: '', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: ''
+                                    //echo '*** Deployment Complete ***'
+
+                                    echo '*** Service Verification Starting ***'
+                                    openshiftVerifyService apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', namespace: 'pipeline-dev', svcName: 'cotd', verbose: 'false'
+                                    echo '*** Service Verification Complete ***'
+          
+                              stage ("Deploy and Test in Testing Env")
+                                    echo '*** Deploy testready build in pipeline-test project  ***'
+                                    openshiftTag(srcStream: 'cotd', srcTag: 'latest', destStream: 'cotd', destTag: 'testready')
+                                    openshiftDeploy apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'cotd', namespace: 'pipeline-test', verbose: 'false', waitTime: ''
+                                    openshiftVerifyDeployment apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'cotd', namespace: 'pipeline-test', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: '10'
+                                    //sh 'curl http://cotd-pipeline-test.cloudapps.example.com/data/ | grep cats -q'
+          
+                              stage ("Promote and Verify - Production Env")
+                                    echo '*** Waiting for Input ***'
+                                    input 'Should we deploy to Production?'
+
+                                    openshiftTag(srcStream: 'cotd', srcTag: 'testready', destStream: 'cotd', destTag: 'prodready')
+                                    echo '*** Deploying to Production - Start ***'
+                                    openshiftDeploy apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'cotd', namespace: 'pipeline-prod', verbose: 'false', waitTime: ''
+                                    openshiftVerifyDeployment apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'cotd', namespace: 'pipeline-prod', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: '10'
+                                    sleep 10
+                                    //sh 'curl http://cotd-pipeline-prod.cloudapps.example.com/data/ | grep cats -q'
+                                    echo '*** Deploying to Production - Completed ***'
                                }
 
 kind: List
